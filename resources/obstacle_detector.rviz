@@ -132,7 +132,7 @@ Visualization Manager:
       Size (Pixels): 5
       Size (m): 0.00999999978
       Style: Points
-      Topic: /scan
+      Topic: /sensors/lidar3d_0/scan
       Unreliable: true
       Use Fixed Frame: true
       Use rainbow: true

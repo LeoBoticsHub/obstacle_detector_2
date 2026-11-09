@@ -91,17 +91,17 @@ void ObstacleExtractor::updateParamsUtil(){
 
   nh_->get_parameter_or("active", p_active_, true);
   nh_->get_parameter_or("use_scan", p_use_scan_, true);
-  nh_->get_parameter_or("use_pcl", p_use_pcl_, true);
-  nh_->get_parameter_or("use_pcl2", p_use_pcl_2_, true);
-  nh_->get_parameter_or("use_split_and_merge", p_use_split_and_merge_, true);
-  nh_->get_parameter_or("circles_from_visibles", p_circles_from_visibles_, true);
+  nh_->get_parameter_or("use_pcl", p_use_pcl_, false);
+  nh_->get_parameter_or("use_pcl2", p_use_pcl_2_, false);
+  nh_->get_parameter_or("use_split_and_merge", p_use_split_and_merge_, false);
+  nh_->get_parameter_or("circles_from_visibles", p_circles_from_visibles_, false);
   nh_->get_parameter_or("discard_converted_segments", p_discard_converted_segments_, true);
   nh_->get_parameter_or("transform_coordinates", p_transform_coordinates_, true);
 
   nh_->get_parameter_or("min_group_points", p_min_group_points_, 5);
 
-  nh_->get_parameter_or("max_group_distance", p_max_group_distance_, 0.1);
-  nh_->get_parameter_or("distance_proportion", p_distance_proportion_, 0.00628);
+  nh_->get_parameter_or("max_group_distance", p_max_group_distance_, 0.12);
+  nh_->get_parameter_or("distance_proportion", p_distance_proportion_, 0.0087);
   nh_->get_parameter_or("max_split_distance", p_max_split_distance_, 0.2);
   nh_->get_parameter_or("max_merge_separation", p_max_merge_separation_, 0.2);
   nh_->get_parameter_or("max_merge_spread", p_max_merge_spread_, 0.2);
@@ -111,14 +111,14 @@ void ObstacleExtractor::updateParamsUtil(){
   nh_->get_parameter_or("max_x_limit", p_max_x_limit_,  10.0);
   nh_->get_parameter_or("min_y_limit", p_min_y_limit_, -10.0);
   nh_->get_parameter_or("max_y_limit", p_max_y_limit_,  10.0);
-  nh_->get_parameter_or("frame_id", p_frame_id_, std::string{"map"});
+  nh_->get_parameter_or("frame_id", p_frame_id_, std::string{"odom"});
 
   if (p_active_ != prev_active) {
     if (p_active_) {
       if (p_use_scan_){
         RCLCPP_INFO_STREAM_ONCE(nh_->get_logger(), "Using LaserScan topic");
         scan_sub_ = nh_->create_subscription<sensor_msgs::msg::LaserScan>(
-            "scan", 10, std::bind(&ObstacleExtractor::scanCallback, this, std::placeholders::_1));
+            "/sensors/lidar3d_0/scan", rclcpp::SensorDataQoS(), std::bind(&ObstacleExtractor::scanCallback, this, std::placeholders::_1));
       }else if (p_use_pcl_){
         RCLCPP_INFO_STREAM_ONCE(nh_->get_logger(), "Using PointCloud1 topic");
         pcl_sub_ = nh_->create_subscription<sensor_msgs::msg::PointCloud>(
